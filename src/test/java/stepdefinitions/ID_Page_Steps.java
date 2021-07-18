@@ -31,8 +31,9 @@ public class ID_Page_Steps {
               BufferedReader br;       
 
               String ID_filePath = "C:\\Users\\hp\\Desktop\\ala.txt";
-              String CI_filePath = "C:\\Users\\hp\\Desktop\\ala.txt";
-              String CN_filePath = "C:\\Users\\hp\\Desktop\\ala.txt";             
+              String CI_filePath = "C:\\ilai_New\\workspace\\CRIF_AUTOMATION\\src\\test\\resources\\sourceFolder\\ala.txt";
+              String CN_filePath = "C:\\ilai_New\\workspace\\CRIF_AUTOMATION\\src\\test\\resources\\sourceFolder\\ala.txt";
+          
 
               public ID_Page idpage = new ID_Page(DriverFactory.getDriver());
 
@@ -46,10 +47,6 @@ public class ID_Page_Steps {
 
               }
 
- 
-
-             
-
               @When("I read the ID_TXT file by line by line")
 
               public void i_read_the_id_txt_file_by_line_by_line() {                 
@@ -57,8 +54,6 @@ public class ID_Page_Steps {
                              br = idpage.readCSVfile(ID_filePath);
 
               }
-
-             
 
               @When("I read the CI_TXT file by line by line")
 
@@ -68,8 +63,6 @@ public class ID_Page_Steps {
 
               }
 
-             
-
               @When("I read the CN_TXT file by line by line")
 
               public void i_read_the_cn_txt_file_by_line_by_line() {                
@@ -78,32 +71,22 @@ public class ID_Page_Steps {
 
               }
 
-             
+              @Then("I validate the {int} field is Not Null in the TXT file for {int} and {string}")
+              public void i_validate_field_is_not_null_in_the_txt_file_and_testcasename(int columnNoToBeValidated, int columnNoOfId, String TestCaseName) {
 
-             
-
-              @Then("I validate the {int} field is Not Null in the TXT file and {string}")
-
-              public void i_validate_field_is_not_null_in_the_txt_file_and_testcasename(Integer columnNo, String TestCaseName) {
-
-                             idpage.validation_Empty(br, columnNo, TestCaseName);
+                             idpage.validation_Empty(br,  columnNoToBeValidated,  columnNoOfId, TestCaseName);
 
                              System.out.println("Not Null Validation is Completed.");
 
               }
 
- 
+              @Then("I validate the {int} field is date format validation in the TXT file for {int} and {string}")
+              public void i_validate_field_is_date_format_validation_in_the_txt_file_and_testcasename( int columnNoToBeValidated, int columnNoOfId, String TestCaseName) {
 
-              @Then("I validate the {int} field is date format validation in the TXT file and {string}")
-
-              public void i_validate_field_is_date_format_validation_in_the_txt_file_and_testcasename(Integer columnNo, String TestCaseName) {
-
-                             idpage.validation_Date(br, columnNo, TestCaseName);
+                             idpage.validation_Date(br, columnNoToBeValidated,  columnNoOfId, TestCaseName);
 
                              System.out.println("Date Format Validation is Completed.");
 
-              }          
-
-             
+              }    
 
 }

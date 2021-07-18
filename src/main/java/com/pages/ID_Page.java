@@ -25,14 +25,18 @@ import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 
 import com.aventstack.extentreports.Status;
-
+import com.aventstack.extentreports.markuputils.ExtentColor;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
+
+import jdk.jfr.internal.Logger;
 
 public class ID_Page {
 
 	public static ExtentHtmlReporter reporter = new ExtentHtmlReporter("./REPORT/CRIF_VALIDATION_REPORT.html");
 
-	public static ExtentReports extent = new ExtentReports();;
+	public static ExtentReports extent = new ExtentReports();
 
 	public static ExtentTest logger;
 
@@ -43,25 +47,23 @@ public class ID_Page {
 	static boolean flag = true;
 
 	private WebDriver driver;
+	
+	
+	
 
 	// Constructor of the page class
 
 	public ID_Page(WebDriver driver) {
 
-		this.driver = driver;
+		this.driver = driver;		
 
 	}
 
 	/*
 	 * 
 	 * Name: Alaguraja. R
-	 *
-	 * 
 	 * 
 	 * This function is to read the CSV file
-	 *
-	 * 
-	 * 
 	 */
 
 	public BufferedReader readCSVfile(String filePath) {
@@ -69,7 +71,12 @@ public class ID_Page {
 		String line;
 
 		String splitBy = "\\|";
-
+		
+		 reporter.config().setDocumentTitle("CRIF FILE AUTOMATION REPORT");
+		 reporter.config().setReportName("CRIF FILE AUTOMATION REPORT");
+		 reporter.config().setTheme(Theme.DARK);
+		 
+		
 		try {
 
 			// parsing a CSV file into BufferedReader class constructor
@@ -98,18 +105,16 @@ public class ID_Page {
 	 * 
 	 */
 
-	public static void validation_isEmpty(String data, int count) {
+	public static void validation_isEmpty(String data, String id, int count) {
 
 		// check Month Format
 
 		boolean n = isEmpty(data);
 
 		if (n) {
-
-			System.out.println("EMPTY CELL VALUE" + "  " + "ROW NUMBER-->" + count);
-
-			logger.log(Status.FAIL, "EMPTY CELL VALUE" + "  " + "ROW NUMBER-->" + count);
-
+			
+			System.out.println("EMPTY CELL VALUE" + "  " + "ROW NUMBER-->" + count+"\n" +" CIS NUMBER : " + id +"\n" +" ACTUAL CELL VALUE: NULL");
+			logger.log(Status.FAIL, "<b>EMPTY CELL VALUE<b>" + "  " + "<b>ROW NUMBER--></b>" + count+"<br />" +"<b> CIS NUMBER :<b> " + id +"<br />" +"<b> ACTUAL CELL VALUE: NULL<b>");			
 			flag = false;
 
 		}
@@ -120,11 +125,11 @@ public class ID_Page {
 	 * 
 	 * Name: Alaguraja. R
 	 * 
-	 * * This below function is to validate Date Format
+	 * * This below function is to validate Date Format.
 	 * 
 	 */
 
-	public static void validation_DateFormat(String data, int count) {
+	public static void validation_DateFormat(String data,String id, int count) {
 
 		// check Month Format
 
@@ -132,9 +137,9 @@ public class ID_Page {
 
 		if (n == false) {
 
-			System.out.println("INVALID DATE FORMAT" + "  " + "ROW NUMBER-->" + count);
+			System.out.println("INVALID DATE FORMAT" + "  " + "ROW NUMBER-->" + count+ " CIS NUMBER  : " + id + " ACTUAL CELL VALUE "+ data);
 
-			logger.log(Status.FAIL, "INVALID DATE FORMAT" + "  " + "ROW NUMBER-->" + count);
+			logger.log(Status.FAIL, "<b>INVALID DATE FORMAT<b>" + "  " + "<b>ROW NUMBER--><b>" + count+"<br />"+ "<b> CIS NUMBER  : <b>" + id +"<br />" +"<b> ACTUAL CELL VALUE: <b>"+ data);
 
 			flag = false;
 
@@ -170,7 +175,7 @@ public class ID_Page {
 	 * 
 	 */
 
-	public void validation_Date(BufferedReader br, int columnNo, String testCaseName) {
+	public void validation_Date(BufferedReader br, int columnNoToBeValidated, int columnNoOfId, String testCaseName) {
 
 		count = 0;
 
@@ -188,13 +193,14 @@ public class ID_Page {
 
 			{
 
-				String[] employee = line.split(splitBy);
+				String[] row = line.split(splitBy);
 
-				String data = employee[columnNo];
+				String data = row[columnNoToBeValidated];
+				String id = row[columnNoOfId];
 
 				count++;
 
-				ID_Page.validation_DateFormat(data, count);
+				ID_Page.validation_DateFormat(data, id, count);
 
 			}
 
@@ -226,7 +232,7 @@ public class ID_Page {
 	 * 
 	 */
 
-	public void validation_Empty(BufferedReader br, int columnNo, String testCaseName) {
+	public void validation_Empty(BufferedReader br, int columnNoToBeValidated, int columnNoOfId, String testCaseName) {
 
 		count = 0;
 
@@ -244,13 +250,15 @@ public class ID_Page {
 
 			{
 
-				String[] employee = line.split(splitBy);
+				String[] row = line.split(splitBy);
 
-				String data = employee[columnNo];
+				String data = row[columnNoToBeValidated];
+				
+				String id = row[columnNoOfId];
 
 				count++;
 
-				ID_Page.validation_isEmpty(data, count);
+				ID_Page.validation_isEmpty(data, id, count);
 
 			}
 

@@ -1,36 +1,36 @@
 $(document).ready(function() {
 CucumberHTML.timelineItems.pushArray([
   {
-    "id": "1fa8e358-2722-4501-8a3c-3f20899aa544",
-    "feature": "ID FILE CRIF Validation Feature",
-    "scenario": "ID - CIS Number Reference Date Format Validation",
-    "start": 1626585639517,
-    "group": 1,
-    "content": "",
-    "tags": "",
-    "end": 1626585671717,
-    "className": "passed"
-  },
-  {
-    "id": "a8bbcd14-6634-4b96-b77f-d81d3658a235",
-    "feature": "ID FILE CRIF Validation Feature",
-    "scenario": "ID - Date of Birth Validation",
-    "start": 1626585676217,
-    "group": 1,
-    "content": "",
-    "tags": "",
-    "end": 1626585679945,
-    "className": "passed"
-  },
-  {
-    "id": "0a2f7fa2-65c3-4500-9f0a-f6cfa33b35d4",
+    "id": "3ddb74e6-4f08-4478-8504-086551c1445d",
     "feature": "ID FILE CRIF Validation Feature",
     "scenario": "ID - Provider CIS Numner Not Null Validation",
-    "start": 1626585671750,
+    "start": 1626609035176,
     "group": 1,
     "content": "",
     "tags": "",
-    "end": 1626585676204,
+    "end": 1626609037805,
+    "className": "passed"
+  },
+  {
+    "id": "d3c29083-571e-40c6-b83c-6c7106257463",
+    "feature": "ID FILE CRIF Validation Feature",
+    "scenario": "ID - Date of Birth Validation",
+    "start": 1626609037840,
+    "group": 1,
+    "content": "",
+    "tags": "",
+    "end": 1626609040346,
+    "className": "passed"
+  },
+  {
+    "id": "e61017d8-d301-4f79-84b1-bd9757de130c",
+    "feature": "ID FILE CRIF Validation Feature",
+    "scenario": "ID - CIS Number Reference Date Format Validation",
+    "start": 1626609030727,
+    "group": 1,
+    "content": "",
+    "tags": "",
+    "end": 1626609035151,
     "className": "passed"
   }
 ]);
