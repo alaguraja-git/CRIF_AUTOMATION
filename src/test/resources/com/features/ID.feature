@@ -26,3 +26,12 @@ Then I validate the <column_number> field is date format validation in the TXT f
 Examples:
 					|column_number|id_column_number|test_case_name|
 					|8|1|ID_File - Date of Birth|
+					
+Scenario Outline: ID - Duplicate validation
+Given CRIF File is available
+When I read the ID_TXT file by line by line
+Then I validate the <column_number> field is for duplicate validation in the TXT file for <id_column_number> and "<test_case_name>"
+
+Examples:
+					|column_number|id_column_number|test_case_name|
+					|5|1|ID_File - Duplicate validation|

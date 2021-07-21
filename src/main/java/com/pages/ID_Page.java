@@ -1,36 +1,24 @@
 package com.pages;
 
 import java.io.BufferedReader;
-
 import java.io.FileReader;
-
-import java.io.IOException;
-
 import java.text.ParseException;
-
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
-
+import java.util.HashMap;
 import java.util.regex.Matcher;
-
 import java.util.regex.Pattern;
-
-
 
 import org.openqa.selenium.WebDriver;
 
 import com.aventstack.extentreports.ExtentReports;
-
 import com.aventstack.extentreports.ExtentTest;
-
 import com.aventstack.extentreports.Status;
-import com.aventstack.extentreports.markuputils.ExtentColor;
-import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import com.aventstack.extentreports.reporter.configuration.Theme;
+import com.qa.util.TXTFile;
 
-import jdk.jfr.internal.Logger;
+
 
 public class ID_Page {
 
@@ -41,8 +29,6 @@ public class ID_Page {
 	public static ExtentTest logger;
 
 	static int count = 0;
-
-
 
 	static boolean flag = true;
 
@@ -105,7 +91,7 @@ public class ID_Page {
 	 * 
 	 */
 
-	public static void validation_isEmpty(String data, String id, int count) {
+	public static void validation_isEmpty(String data, String id,TXTFile textFile, int count, String testCaseName) {
 
 		// check Month Format
 
@@ -114,7 +100,10 @@ public class ID_Page {
 		if (n) {
 			
 			System.out.println("EMPTY CELL VALUE" + "  " + "ROW NUMBER-->" + count+"\n" +" CIS NUMBER : " + id +"\n" +" ACTUAL CELL VALUE: NULL");
-			logger.log(Status.FAIL, "<b>EMPTY CELL VALUE<b>" + "  " + "<b>ROW NUMBER--></b>" + count+"<br />" +"<b> CIS NUMBER :<b> " + id +"<br />" +"<b> ACTUAL CELL VALUE: NULL<b>");			
+			String failureMessage = "<b>EMPTY CELL VALUE<b>" + "  " + "<b>ROW NUMBER--><b>" + count+"<br />"+ "<b> CIS NUMBER  : <b>" + id +"<br />" +"<b> ACTUAL CELL VALUE: NULL<b>";
+			logger.log(Status.FAIL, failureMessage);			
+			textFile.writeTxtFile(testCaseName+".txt", "\n EMPTY CELL VALUE ROW NUMBER -->" + count+ " CIS NUMBER : " + id +" ACTUAL CELL VALUE: NULL");
+			
 			flag = false;
 
 		}
@@ -129,7 +118,7 @@ public class ID_Page {
 	 * 
 	 */
 
-	public static void validation_DateFormat(String data,String id, int count) {
+	public static void validation_DateFormat(String data,String id, int count,TXTFile textFile, String testCaseName) {
 
 		// check Month Format
 
@@ -140,7 +129,7 @@ public class ID_Page {
 			System.out.println("INVALID DATE FORMAT" + "  " + "ROW NUMBER-->" + count+ " CIS NUMBER  : " + id + " ACTUAL CELL VALUE "+ data);
 
 			logger.log(Status.FAIL, "<b>INVALID DATE FORMAT<b>" + "  " + "<b>ROW NUMBER--><b>" + count+"<br />"+ "<b> CIS NUMBER  : <b>" + id +"<br />" +"<b> ACTUAL CELL VALUE: <b>"+ data);
-
+			textFile.writeTxtFile(testCaseName+".txt", "\n INVALID DATE FORMAT ROW NUMBER -->" + count+ " CIS NUMBER : " + id +" ACTUAL CELL VALUE: " + data);
 			flag = false;
 
 		}
@@ -188,6 +177,8 @@ public class ID_Page {
 			extent.attachReporter(reporter);
 
 			logger = extent.createTest(testCaseName);
+			 TXTFile textFile = new TXTFile();
+        	 textFile.txtFileCreation(this.getClass().getSimpleName(), testCaseName+".txt");
 
 			while ((line = br.readLine()) != null) // returns a Boolean value
 
@@ -200,7 +191,7 @@ public class ID_Page {
 
 				count++;
 
-				ID_Page.validation_DateFormat(data, id, count);
+				ID_Page.validation_DateFormat(data, id, count,  textFile, this.getClass().getSimpleName() +"/"+ testCaseName);
 
 			}
 
@@ -213,6 +204,7 @@ public class ID_Page {
 			}
 
 			extent.flush();
+			textFile.closeTxtFile();
 
 		} catch (Exception e) {
 
@@ -246,6 +238,9 @@ public class ID_Page {
 
 			logger = extent.createTest(testCaseName);
 
+			   TXTFile textFile = new TXTFile();
+          	   textFile.txtFileCreation(this.getClass().getSimpleName(), testCaseName+".txt");
+          	   
 			while ((line = br.readLine()) != null) // returns a Boolean value
 
 			{
@@ -258,7 +253,7 @@ public class ID_Page {
 
 				count++;
 
-				ID_Page.validation_isEmpty(data, id, count);
+				ID_Page.validation_isEmpty(data, id, textFile, count, this.getClass().getSimpleName()+"/"+ testCaseName);
 
 			}
 
@@ -271,6 +266,7 @@ public class ID_Page {
 			}
 
 			extent.flush();
+			textFile.closeTxtFile();
 
 		} catch (Exception e) {
 
@@ -282,6 +278,75 @@ public class ID_Page {
 
 	}
 
+	
+	public void findDuplicate(BufferedReader br, int columnNoToBeValidated, int columnNoOfId, String testCaseName) {
+
+		count = 0;
+
+		String line;
+
+		String splitBy = "\\|";
+		
+		HashMap<String, String> map = new HashMap<>();
+
+		try {
+
+			extent.attachReporter(reporter);
+
+			logger = extent.createTest(testCaseName);
+
+			   TXTFile textFile = new TXTFile();
+          	   textFile.txtFileCreation(this.getClass().getSimpleName(), testCaseName+".txt");
+          	   
+          	   
+			while ((line = br.readLine()) != null) // returns a Boolean value
+
+			{
+
+				String[] row = line.split(splitBy);
+
+				String data = row[columnNoToBeValidated];
+				
+				String id = row[columnNoOfId];
+				
+				if(!"000".equals(data.trim())) {
+					if( map.containsValue(data)) {
+						logger.log(Status.FAIL, "<b>DUPLICATE CELL VALUE <b>" + "  " + "<b>ROW NUMBER--><b>" + count+"<br />"+ "<b> CIS NUMBER  : <b>" + id +"<br />" +"<b> ACTUAL CELL VALUE: <b>"+ data);
+						textFile.writeTxtFile(testCaseName+".txt", "\n DUPLICATE CELL  VALUE ROW NUMBER -->" + count+ " CIS NUMBER : " + id +" ACTUAL CELL VALUE: " +data);
+						
+						
+					} else {
+						map.put(data, data);
+					}
+				}
+					
+				
+				count++;
+
+				
+
+			}
+
+			if (flag)
+
+			{
+
+				logger.log(Status.PASS, "THERE IS NO DUPLICATE CELL VALUE IN THE FILE");
+
+			}
+
+			extent.flush();
+			textFile.closeTxtFile();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+			System.out.println(e.getMessage());
+
+		}
+
+	}
 	/*
 	 * ALAGURAJA
 	 * 
